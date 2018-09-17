@@ -1,10 +1,10 @@
 defmodule Discuss.TopicController do
   use Discuss.Web, :controller
+
+  # When use alias you can change for example %Discuss.Topic{} for %Topic{}
+  alias Discuss.Topic
+
   def new(conn, params) do
-    IO.puts "++++"
-    IO.inspect conn
-    IO.puts "++++"
-    IO.inspect params
-    IO.puts "++++"
+    changeset = Topic.changeset(%Topic{}, %{})
   end
 end
