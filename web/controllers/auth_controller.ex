@@ -13,7 +13,6 @@ defmodule Discuss.AuthController do
   end
 
   defp signin(conn, changeset) do
-    # insert_or_opdate_user(changeset)
     case insert_or_opdate_user(changeset) do
       {:ok, user} ->
         conn
@@ -25,6 +24,12 @@ defmodule Discuss.AuthController do
         |> put_flash(:error, "Error signing in")
         |> redirect(to: topic_path(conn, :index))
     end
+  end
+
+  def signout(conn, _params) do
+    conn
+    |> configure_session(drop: true)
+    |> redirect(to: topic_path(conn, :index))
   end
 
   defp insert_or_opdate_user(changeset) do
