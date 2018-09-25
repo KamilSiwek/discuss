@@ -9,7 +9,22 @@ defmodule Discuss.AuthController do
     provider: "github"}
     changeset = User.changeset(%User{}, user_params)
 
-    insert_or_opdate_user(changeset)
+    signin(conn, changeset)
+  end
+
+  defp signin(conn, changeset) do
+    # insert_or_opdate_user(changeset)
+    case insert_or_opdate_user(changeset) do
+      {:ok, user} ->
+        conn
+        |> put_flash(:info, "Welcome back!")
+        |> put_session(:useer_id, user.id)
+        |> redirect(to: topic_path(conn, :index))
+      {:error, _reason} ->
+        conn
+        |> put_flash(:error, "Error signing in")
+        |> redirect(to: topic_path(conn, :index))
+    end
   end
 
   defp insert_or_opdate_user(changeset) do
