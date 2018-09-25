@@ -23,6 +23,7 @@ defmodule Discuss.TopicController do
   # Alternative for:
   # def create(conn, params) do
      # %{"topic" => topic} = params
+   # end
   def create(conn, %{"topic" => topic}) do
     changeset = Topic.changeset(%Topic{}, topic)
 
@@ -44,10 +45,10 @@ defmodule Discuss.TopicController do
   end
 
   def update(conn, %{"id" => topic_id, "topic" => topic}) do
-    # old_topic = Repo.get(Topic, topic_id)
-    # changeset = Topic.changeset(old_topic, topic)
+    old_topic = Repo.get(Topic, topic_id)
+    changeset = Topic.changeset(old_topic, topic)
     # or alternative:
-    changeset = Repo.get(Topic, topic_id) |> Topic.changeset(topic)
+    # changeset = Repo.get(Topic, topic_id) |> Topic.changeset(topic)
 
     case Repo.update(changeset) do
       {:ok, _topic} ->
@@ -55,7 +56,15 @@ defmodule Discuss.TopicController do
         |> put_flash(:info, "Topic Updated")
         |> redirect(to: topic_path(conn, :index))
       {:error, changeset} ->
-        render conn, "edit.html", changeset: changeset
+        render conn, "edit.html", changeset: changeset, topic: old_topic
     end
+  end
+
+  def delete(conn, %{"id" => topic_id}) do
+    Repo.get!(Topic, topic_id) |> Repo.delete!
+
+    conn
+    |> put_flash(:info, "Topic deleted")
+    |> redirect(to: topic_path(conn, :index))
   end
 end
