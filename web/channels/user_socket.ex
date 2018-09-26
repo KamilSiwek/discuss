@@ -2,7 +2,8 @@ defmodule Discuss.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", Discuss.RoomChannel
+  channel "comments:*", Discuss.CommentsChannel
+  # get "/comments/:id", CommentController, :join, :handle_in
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
